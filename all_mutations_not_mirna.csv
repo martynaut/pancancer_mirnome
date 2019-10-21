@@ -1,0 +1,7 @@
+,chrom,pos,indiv_name,ref,alt,mutation_type,alg,norm_ref_count,norm_alt_count,tumor_ref_count,tumor_alt_count,type_of_subst,start,stop,name
+329,chr3,75630786,TCGA-55-7910,G,A,subst,"""muse""",60,1,46,16,transition,75630742.0,75630871.0,test_test
+330,chr3,75630794,TCGA-73-4675,C,G,subst,"""somaticsniper""",39,2,45,26,transversion,75630742.0,75630871.0,test_test
+331,chr3,75630794,TCGA-86-8279,C,G,subst,"""somaticsniper""",21,0,39,11,transversion,75630742.0,75630871.0,test_test
+332,chr3,75630819,TCGA-44-8119,G,C,subst,"""muse:mutect2""",323,0,131,18,transversion,75630742.0,75630871.0,test_test
+333,chr3,75630824,TCGA-55-1595,C,T,subst,"""mutect2:varscan2""",329,0,94,13,transition,75630742.0,75630871.0,test_test
+334,chr3,75630855,TCGA-44-7659,T,C,subst,"""muse:varscan2""",151,2,115,28,transition,75630742.0,75630871.0,test_test

@@ -1,0 +1,12 @@
+pandas
+click
+openpyxl
+numpy
+biopython
+xlrd
+lxml
+requests
+scipy
+biopython
+matplotlib
+seaborn

@@ -1,0 +1,1 @@
+python3 run_mirnaome_summary.py /Users/martynaurbanek/Documents/private/repos/files/output/

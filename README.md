@@ -1,6 +1,6 @@
-# miRNome somatic mutations
+# Pan-Cancer miRNome somatic mutations
 
-Project containing Python scripts used to analyse somatic mutations in cancer (LUAD and LUSC) patients 
+Project containing Python scripts used to analyse somatic mutations in cancer patients 
 using somatic mutation data from TCGA
 
 Python scripts may be reused for other data sources with input data prepared as somatic mutation data 
@@ -260,25 +260,7 @@ Poznan, Poland
 
 ## Citation
 
-**Somatic mutations in miRNA genes in lung cancer – potential functional consequences of non-coding sequence variants**
-
-
-Paulina Galka-Marciniak<sup>1</sup>, Martyna Olga Urbanek-Trzeciak<sup>1</sup>, Paulina Maria Nawrocka<sup>1</sup>, 
-Agata Dutkiewicz<sup>1</sup>, Maciej Giefing<sup>2</sup>, Marzena Anna Lewandowska<sup>3,4</sup>, 
-and Piotr Kozlowski<sup>1</sup>
-
-
-<sup>1</sup> Institute of Bioorganic Chemistry, Polish Academy of Sciences,  Poznan, Poland
-
-<sup>2</sup> Institute of Human Genetics, Polish Academy of Sciences, Poznan, Poland
-
-<sup>3</sup> The F. Lukaszczyk Oncology Center, Department of Molecular Oncology and Genetics, Bydgoszcz, Poland
-
-<sup>4</sup> The Ludwik Rydygier Collegium Medicum, Department of Thoracic Surgery and Tumours, Nicolaus Copernicus University, Bydgoszcz, Poland
-
-**Biorxiv link to preprint:** 
-
-http://biorxiv.org/cgi/content/short/579011v1
+TBD
 
 ## Contact
 
@@ -286,4 +268,4 @@ For any issues, please create a GitHub Issue.
 
 ## Funding
 
-This work was supported by research grants from the Polish National Science Centre [2016/22/A/NZ2/00184 (to P.K.) and 2015/17/N/NZ3/03629 (to M.O. U.-T.)] and the Polish Ministry of Science and Higher Education (support for young investigators to P.G.-M.)
+This work was supported by research grants from the Polish National Science Centre [2016/22/A/NZ2/00184 (to P.K.) and 2015/17/N/NZ3/03629 (to M.O. U.-T.)]

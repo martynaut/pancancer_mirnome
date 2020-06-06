@@ -27,217 +27,43 @@ make
 sudo make install
 ```
 
-### Input data description
+### Before runing mirnome analysis input files (localization and confidence scores) need to be prepared
 
-1) Coordinates
+Using files :
+- hairpin.fa (from miRBase)
+- hsa.gff3.txt (from miRBase)
+- confidence.txt (from miRBase)
+- confidence_score.txt (from miRBase)
+- aliases.txt (from miRBase)
+- mirna_chromosome_build.txt (from miRBase)
+- hsa.gff (from mirgeneDB)
 
-    `\t` separated file without header with values like:
-
-    ```chromosome\tstart\tstop\tsequence_name\n```
-
-    example:
-
-    ```
-    chr1	17343	17456	hsa-mir-6859-1
-    chr1	30382	30483	hsa-mir-1302-2
-    chr1	632306	632428	hsa-mir-6723
-    ```
-2) Confidence file
-
-    Excel file with columns: `name, score, start, stop, Strand, id, confidence`
-    where name is `name` of miRNA, `score` is mirBase confidence score,
-    `start` and `stop` are coordinates, `Strand` is strand with `+` and `-` values,
-    `id` id mirBase_ID and `confidence` is miRBase confidence label with `High` and `Low` values.
+ViennaRNA is needed (for installation see above). Important: add **absolute** path to Vienna package 
     
-    Example row: `hsa-mir-1234, 0, 144400086, 144400165, -, MI0006324, Low`
+To prepare the files run script `prepare_localization_file.py` similar to (you can also find `run_localization.sh` file in the repository):
 
-    Confidence file may be prepared with a script `prepare_confidence_file.py`
-    based on four files downloaded from miRBase `confidence.txt`,
-    `confidence_score.txt`,  `aliases.txt` and `mirna_chromosome_build`.
-    
-    To run this script use:
-    ```
-    python3 prepare_confidence_file.py ~/Documents/files_for_mirnaome/confidence.txt \
-    ~/Documents/files_for_mirnaome/confidence_score.txt \
-    ~/Documents/files_for_mirnaome/aliases.txt ~/Documents/files_for_mirnaome/mirna_chromosome_build.txt \
-    ~/Documents/files_for_mirnaome/confidence_file.xlsx
-    ```
-    
-3) mirgenedb file
-    
-    Genomic coordinates from mirgenedb (http://mirgenedb.org/download) for human.
-    `hsa.gff` file
-    
-4) Cancer exons
+    python3 prepare_localization_file.py /path/to/ViennaRNA-2.4.11 \
+    /path/to/hairpin.fa \
+    /path/to/hsa.gff3.txt \
+    /path/to/confidence.txt \
+    /path/to/confidence_score.txt \
+    /path/to/aliases.txt \
+    /path/to/mirna_chromosome_build.txt \
+    /path/to/hsa.gff \
+    /path/to/output/folder
 
-    Text file with names of exons that should be included in 
-    the first steps of the analysis (first mutations extraction
-    from vcf files, are included in coordinates file) but are not miRNA genes.
-    Single exon name in line.
-    
-    Example:
-    ```bash
-    EGFR_chr7.20
-    EGFR_chr7.21
-    EGFR_chr7.22
-    ``` 
-     
-5) Localization file
-
-    Excel file with columns: `chrom, name, start, stop, orientation, based_on_coordinates, arm, type`
-    where name is `chrom` is chromosome id, `name` of miRNA localization, 
-    `start` and `stop` are coordinates, `orientation` is strand with `+` and `-` values,
-    `based_on_coordinates` states if localization is based on miRBase coordinates or
-     structure prediction, `arm` is which arm of miRNA this sequence is on and `type` is type
-     of localization within miRNA precursor.
-
-    Example row: `chr1, hsa-mir-6859-1-3p_post-seed, 17369, 17383, -, yes, 3p, post-seed`
-
-    Localization file may be prepared with a script `prepare_localization_file.py`
-    based on two files downloaded from miRBase `hairpin.fa`,
-    `hsa.gff` (here saved as `hsa.gff.txt` to differentiate from `hsa.gff` from mirgendb) and coordinates file. ViennaRNA is needed
-    (for installation see above). Important: add **absolute** path to Vienna package 
-    
-    To run this script use:
-    ```
-    python3 prepare_localization_file.py /home/<user>/Documents/ViennaRNA-2.4.11 ~/Documents/files_for_mirnaome/hairpin.fa \
-    ~/Documents/files_for_mirnaome/hsa.gff3.txt\
-    ~/Documents/files_for_mirnaome/new_coordinates_all_02.bed ~/Documents/output/Data_LUAD
-    ```
-    
-6) (optional) Chromosome file
-
-    Tab-separated file with regions covered by NGS probes with columns 
-    `TargetID, Interval, Regions, Size, Databases, Coverage, HighCoverage, LowCoverage`
-    
-    Example row: 
-    `HSA-LET-7A-1, chr9:96938239-96938318, 1, 80, CustomRegion, 100.0, 1, 0`
-    
-### Output data description
-
-1) **temp folder**
-
-    Contains merged vcf files if there were multiple samples available per single patient.
-    
-2) **temp_reference folder**
-    
-    Temporary files created in create localization file script.
-    
-3) **files_summary_count_per_patient.csv**
-
-    File with information how many files there are per patient per algorithm. Sanity check: if the merging
-    of vcf files was successful, we should have only ones.
-    
-4) **files_summary.csv**
-
-    Files summary including user_id, file localization, sample id name and aliQ,
-    and algorithm used.
-    
-5) **files_count_per_type.csv**
-
-    Count of files per algorithm used.
-    
-6) **not_unique_patients.csv**
-
-    Patients for which we had multiple files (multiple samples) that were combined in a single vcf.
-    
-7) **do_not_use.txt**
-
-    Files that were replaced with merged vcf files (stored in temp folder)
-    that will not be used in next steps.
-    
-8) **results_muse.csv, results_mutect2.csv, results_somaticsniper.csv, varscan2.csv**
-
-    Mutations found in vcf files obtained in each of four algorithms.
-
-9) **results_muse_eval.csv, results_mutect2_eval.csv, results_somaticsniper_eval.csv,
-varscan2_eval.csv**
-    
-    Mutations found in vcf files obtained in each of four algorithms after additional evaluation methods
-    based on read counts, SSC, BQ and QSS.
-
-10) **all_mutations_filtered.csv**
-
-    Mutations found by each of four algorithms concatenated.
-
-11) **all_mutations_filtered_merge_programs.csv**
-
-    All mutations grouped to deduplicate mutations found by multiple algorithms.
-
-12) **all_mutations_filtered_mut_type_gene.csv**
-
-    All mutations within miRNA genes with gene information, localization and mutation type.
-
-13) **complex.csv**
-
-    Complex mutations are multiple mutations in single miRNA in single patient.
-    Column `complex` is `1` if mutation is treated as complex.
-
-14) **miRNA_per_chromosome.csv**
-
-    How many miRNAs were mutated on single chromosome and how many mutations were found
-    in total on each chromosome.
-
-15) **occur.csv**
-
-    How many total mutations, unique mutations and patients with mutation found per
-    gene.
-
-16) **distinct.csv**
-
-    Unique mutations description with information how many patients had unique mutations.
-    
-17) **distinct_with_loc.csv**
-
-    Unique mutations description with localization within miRNA precursor.
-    
-18) (optional) **mirnas_outside_probes.csv**
-
-    Mutations in what miRNAs were detected in vcf files outside probes-defined regions.
-    
-19) (optional) **high_confidence_mirnas_per_chrom.csv** 
-
-    miRNAs count per chromosome.
-    
-20) (optional) **mirnas_per_chrom.csv** 
-
-    miRNAs mutated (found in vscf) count per chromosome.
-
-21) (optional) **patients_per_chrom.csv** 
-
-    Patients that had mutations in each chromosome.
-    
-    
 ### How to use it
 
-Example run is prepared in `run_mirnaome.sh` bash script.
-
-To prepare confidence data run
-
-```bash
-python3 prepare_confidence_file.py ~/Documents/files_for_mirnaome/confidence.txt \
-~/Documents/files_for_mirnaome/confidence_score.txt \
-~/Documents/files_for_mirnaome/aliases.txt ~/Documents/files_for_mirnaome/mirna_chromosome_build.txt \
-~/Documents/files_for_mirnaome/confidence_file.xlsx
-```
-
-Confidence file can be found in defined directory under defined filename.
-
-To prepare localization data run
-
-```bash
-python3 prepare_localization_file.py ~/Documents/ViennaRNA-2.4.11 ~/Documents/files_for_mirnaome/hairpin.fa \
-~/Documents/files_for_mirnaome/hsa.gff3.txt\
-~/Documents/files_for_mirnaome/new_coordinates_all_02.bed ~/Documents/output/Data_LUAD
-```
-
-Localization file can be found in output folder.
+Example run is prepared in `run_lusc_test.sh` bash script.
 
 To run analysis run
 
 ```
-python3 run_mirnaome_analysis.py ~/dane/HNC/DATA_HNC ~/dane/HNC/RESULTS_HNC ./Reference/new_coordinates_all_02.bed \
-./Reference/confidence.xlsx ./Reference/hsa.gff ./Reference/cancer_exons.txt
+python3 run_mirnaome_analysis.py /path/to/input/LUSC \
+/path/to/output/DATA_LUSC \
+/path/to/calculated/input/files/coordinates.bed \
+/path/to/calculated/input/files/localizations.csv \
+ -s 1
 ```
 
 See additional features running  
@@ -249,8 +75,6 @@ python3 run_mirnaome_analysis.py --help
 To skip steps of the analysis (if first steps were already completed) use `-s` argument adding step
 from which script should start.
 
-To include chromosome analysis use `-c` argument adding chromosome file path.
-
 ## Authors
 
 Martyna O. Urbanek-Trzeciak, Paulina Galka-Marciniak, Piotr Kozlowski
@@ -260,7 +84,12 @@ Poznan, Poland
 
 ## Citation
 
-TBD
+**Pan-Cancer analysis of somatic mutations in miRNA genes**
+
+Martyna Olga Urbanek-Trzeciak, Paulina Galka-Marciniak, Paulina Maria Nawrocka, Ewelina Kowal, Sylwia Szwec, Maciej Giefing,  Piotr Kozlowski
+doi: https://doi.org/10.1101/2020.06.05.136036
+
+https://www.biorxiv.org/content/10.1101/2020.06.05.136036v1
 
 ## Contact
 

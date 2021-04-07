@@ -1,4 +1,4 @@
-# Pan-Cancer miRNome somatic mutations
+# miRNome somatic mutations analysis Python scripts
 
 Project containing Python scripts used to analyse somatic mutations in cancer patients 
 using somatic mutation data from TCGA
